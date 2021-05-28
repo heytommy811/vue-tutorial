@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js"></script>
+    <style>
+        #todo-app {
+            background-color: rgba(180, 30, 30, .5);
+            width: 100%;
+            max-width: 500px;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+        .input-todo {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .input-todo > label {
+            width: 100%;
+        }
+        .show-todo {
+            margin-top: 10px;
+        }
+        .show-todo > p {
+            padding: 5px;
+            text-align: center;
+        }
+        .todo-list {
+            display: inline-block;
+            width: 100%;
+            padding: 5px 10px;
+            border: solid 1px;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .todo-list > li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+        }
+        .todo-list > li:not(:nth-child(1)) {
+            border-top: dashed 1px;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: rgba(50, 50, 220, 1);
+            color: #fff;
+        }
+
+        button:hover {
+            background-color: rgba(50, 50, 220, .9);
+        }
+        button:active {
+            background-color: rgba(50, 50, 220, 1);
+            position: relative;
+            top: 1px;
+        }
+
+        input[type="text"] {
+            outline: none;
+            height: 24px;
+            width: calc(100% - 110px);
+            border-radius: 5px;
+            border: none;
+            padding: 0 5px;
+        }
+    </style>
+    <title>TODO APP</title>
+</head>
+<body>
+    <a href="./">戻る</a>
+    <div id="todo-app">
+        <div class="input-todo">
+            <label for="new_todo_text">
+                <span>Add ToDo</span>
+                <input id="new_todo_text" type="text" v-model="newTodoText" placeholder="input your todo" />
+            </label>
+            <button v-on:click="addTodoItem()">Add</button>
+        </div>
+        <div class="show-todo">
+            <draggable tag="ul" class="todo-list" v-if="items.length">
+                <li is="todo-item"
+                    v-for="(item, index) in items"
+                    v-bind:key="index"
+                    v-bind:text="item.text"
+                    v-on:remove="removeTodoItem(index)">
+                </li>
+            </draggable>
+            <p v-else>Todo is Nothing.</p>
+        </div>
+    </div>
+</body>
+<script>
+    // const draggable = window['vuedraggable'];
+    Vue.component('todo-item',{
+        props: ['text'],
+        template:`
+            <li>
+                <span class="todo-item-text">{{ text }}</span>
+                <div class="todo-item-buttons">
+                    <button v-on:click="$emit('remove')">remove</button>
+                </div>
+            </li>
+        `
+    })
+    const vm = new Vue({
+        el: '#todo-app',
+        // components: { draggable },
+        data: {
+            newTodoText: '',
+            items: [{ text: 'test' }],
+        },
+        methods: {
+            addTodoItem: function () {
+                if (!this.newTodoText) return
+                this.items.push({ text: this.newTodoText })
+                this.newTodoText = ''
+            },
+            removeTodoItem: function (index) {
+                this.items.splice(index, 1)
+            }
+        }
+    })
+</script>
+</html>

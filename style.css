@@ -1,0 +1,22 @@
+* {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+body {
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+[id^="app"] {
+    margin: 20px 0;
+}
+
+
+.transition-enter-active, .transition-leave-active {
+    transition: .5s;
+}
+.transition-enter, .transition-leave-to  {
+    opacity: 0;
+}

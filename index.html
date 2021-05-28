@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- deferを入れることでHTMLの読込完了後にjsを読込ませられる -->
+    <!-- <script src="index.js" defer></script> -->
+    <title>Vue.js tutorial</title>
+</head>
+<body>
+    <h1>This is Vue.js Tutorial</h1>
+
+    <ul>
+        <li>
+            <a href="todoApp.html">TODOアプリ</a>
+        </li>
+    </ul>
+
+    <div id="app-1">
+        <h2>app-1</h2>
+        {{ message }}
+    </div>
+
+    <div id="app-2">
+        <h2>app-2</h2>
+        <p v-bind:title="titleMessage">
+            {{ message }}
+        </p>
+        <p :title="titleMessage2">
+            {{ message2 }}
+        </p>
+    </div>
+    
+    <div id="app-3">
+        <h2>app-3</h2>
+        <p v-if="seen">Now You See Me!</p>
+        <p v-if="notSeen">Now You Not See Me!</p>
+        
+        <div class="app-3-v-if">
+            <button v-on:click="transition = !transition">
+                Toggle v-if
+            </button>
+            <!-- cssクラスにtransition-から始まる名前で定義する必要がある -->
+            <transition name="transition">
+                <p v-if="transition">Transition</p>
+            </transition>
+        </div>
+
+        <!-- TODO: transition -->
+        <!-- https://jp.vuejs.org/v2/guide/transitions.html -->
+
+        <div class="app-3-v-show"></div>
+            <button v-on:click="transitionShow = !transitionShow">
+                Toggle v-show
+            </button>
+            <!-- cssクラスにtransition-から始まる名前で定義する必要がある -->
+            <transition name="transition">
+                <p v-if="transitionShow">TransitionShow</p>
+            </transition>
+        </div>
+    </div>
+
+    <div id="app-4">
+        <h2>app-4</h2>
+        <!-- methodsに定義したaddListItem関数を呼び出す -->
+        <!-- 引数がない場合はaddListItemと省略可能 -->
+        <button v-on:click="addListItem('param')">
+            Add New Item
+        </button>
+        <ul>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for="(todo, index) in todos">
+                {{ index + '. ' + todo.text }}
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for="(value, key) in object">
+                {{ key + ' : ' + value }}
+            </li>
+        </ul>
+
+        <ul>
+            <li v-for="(value, key, index) in object">
+                {{ index + '. ' + key + ' : ' + value }}
+            </li>
+        </ul>
+    </div>
+
+    <div id="app-5">
+        <h2>app-5</h2>
+        <p>{{ message }}</p>
+        <button v-on:click="reverseMessage">Reverse Message</button>
+    </div>
+
+    <div id="app-6">
+        <h2>app-6</h2>
+        <p>{{ message }}</p>
+        <input type="text" v-model="message">
+    </div>
+
+    <div id="app-7">
+        <h2>app-7</h2>
+        <ol>
+            <!-- コンポーネントの中のtodoという属性に対して、groceryList内のオブジェクトitemをバインドしている -->
+            <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+    </div>
+
+    <div id="app-slot">
+        <h2>app-slot</h2>
+        <base-layout>
+            <template v-slot:header>
+                <!-- コンポーネントの<slot name="header"></slot>を置き換える -->
+                <h1>{{header.text}}</h1>
+            </template>
+
+            <template v-slot:default>
+                <!-- コンポーネントの<slot name="default"></slot>を置き換える -->
+                <p v-for="item in main">{{item.text}}</p>
+            </template>
+            
+            <!-- defaultを省略するとコンポーネントの<slot></slot>または<slot name="default"></slot>を置き換える -->
+            <!-- <template>
+                <p v-for="item in main">{{item.text}}</p>
+            </template> -->
+
+            <template v-slot:footer>
+                <p>{{footer.text}}</p>
+            </template>
+        </base-layout>
+    </div>
+
+    <div id="app-emit1">
+        <h2>app-emit1</h2>
+        <emit-button1 v-on:my-custom-event="onCustomEvent"></emit-button1>
+    </div>
+
+    <div id="app-emit2">
+        <h2>app-emit2</h2>
+        <emit-button2 v-on:my-custom-event-param="onCustomEvent"></emit-button2>
+    </div>
+
+    <div id="app-comp">
+        <h2>app-comp</h2>
+        <button v-on:click="componentId=CONST_COMP_IDS.TAB1">Tab1</button>
+        <button v-on:click="componentId=CONST_COMP_IDS.TAB2">Tab2</button>
+        <button v-on:click="componentId=CONST_COMP_IDS.TAB3">Tab3</button>
+        <component :is="componentId"></component>
+    </div>
+
+    <div id="app-life-cycle">
+        <h2>app-life-cycle</h2>
+        <button v-on:click="doDestory">{{ buttonLabel }}</button>
+    </div>
+
+    <div id="app-computed-vs-methods">
+        <h2>app-computed-vs-methods</h2>
+
+        <button v-on:click="addRandomItem">Add Random Item</button>
+        <ul v-if="items.length">
+            <li v-for="item in items">
+                {{ item.val }}
+            </li>
+        </ul>
+        <h3>Computed</h3>
+        <p>itemsが更新されるとgetTotalCountが1回だけ実行され、次回以降はキャッシュされている値を取得するため実行されない</p>
+        <p>Total Count1: {{ getTotalCount }}</p>
+        <p>Total Count2: {{ getTotalCount }}</p>
+
+        <h3>Methods</h3>
+        <p>itemsの更新の有無にかかわらず、getTotalCountMethodが2回実行される</p>
+        <p>Total Count1: {{ getTotalCountMethod() }}</p>
+        <p>Total Count2: {{ getTotalCountMethod() }}</p>
+    </div>
+
+</body>
+<!-- bodyより後にjsを読込む（Vueインスタンス生成時にelementが存在しないというエラーが発生する） -->
+<script src="index.js"></script>
+</html>
